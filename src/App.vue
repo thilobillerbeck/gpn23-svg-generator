@@ -105,10 +105,7 @@ function importJSON() {
         :initial-zoom="0.75"
         :enable-control-button="false"
       >
-        <div
-          id="myContent"
-          class="container"
-        >
+        <div id="myContent" class="container">
           <svg
             id="svg"
             xmlns="http://www.w3.org/2000/svg"
@@ -126,16 +123,8 @@ function importJSON() {
                 fx="50%"
                 fy="50%"
               >
-                <stop
-                  offset="0%"
-                  stop-color="#000000"
-                  stop-opacity="0"
-                />
-                <stop
-                  offset="100%"
-                  stop-color="#000000"
-                  stop-opacity="1"
-                />
+                <stop offset="0%" stop-color="#000000" stop-opacity="0" />
+                <stop offset="100%" stop-color="#000000" stop-opacity="1" />
               </radialGradient>
               <filter id="filmGrain">
                 <feTurbulence
@@ -147,46 +136,16 @@ function importJSON() {
                 />
 
                 <feComponentTransfer in="turb">
-                  <feFuncR
-                    type="linear"
-                    slope="0.2"
-                  />
-                  <feFuncG
-                    type="linear"
-                    slope="0.2"
-                  />
-                  <feFuncB
-                    type="linear"
-                    slope="0.2"
-                  />
-                  <feFuncA
-                    type="linear"
-                    slope="0.15"
-                  />
+                  <feFuncR type="linear" slope="0.2" />
+                  <feFuncG type="linear" slope="0.2" />
+                  <feFuncB type="linear" slope="0.2" />
+                  <feFuncA type="linear" slope="0.15" />
                 </feComponentTransfer>
               </filter>
-              <filter
-                v-if="enableCA"
-                id="chromatic_aberration"
-              >
-                <feOffset
-                  in="SourceGraphic"
-                  result="pre-red"
-                  dx="-8"
-                  dy="4"
-                />
-                <feOffset
-                  in="SourceGraphic"
-                  result="pre-green"
-                  dx="0"
-                  dy="0"
-                />
-                <feOffset
-                  in="SourceGraphic"
-                  result="pre-blue"
-                  dx="8"
-                  dy="-4"
-                />
+              <filter v-if="enableCA" id="chromatic_aberration">
+                <feOffset in="SourceGraphic" result="pre-red" dx="-8" dy="4" />
+                <feOffset in="SourceGraphic" result="pre-green" dx="0" dy="0" />
+                <feOffset in="SourceGraphic" result="pre-blue" dx="8" dy="-4" />
                 <feColorMatrix
                   type="matrix"
                   in="pre-red"
@@ -220,11 +179,7 @@ function importJSON() {
                   in2="green"
                   result="red_green"
                 />
-                <feBlend
-                  mode="screen"
-                  in="red_green"
-                  in2="blue"
-                />
+                <feBlend mode="screen" in="red_green" in2="blue" />
               </filter>
             </defs>
             <g
@@ -233,14 +188,8 @@ function importJSON() {
             >
               <g id="background">
                 <!-- BASE PATTERN -->
-                <template
-                  v-for="y in numY"
-                  :id="`pattern-row-${y}`"
-                >
-                  <template
-                    v-for="x in numX"
-                    :id="`pattern-row-${y}-col-${x}`"
-                  >
+                <template v-for="y in numY" :key="y">
+                  <template v-for="x in numX" :key="x">
                     <Triangle
                       :square-size="squareSize"
                       :x="x * squareSize - squareSize - squareSize / 2"
@@ -332,8 +281,8 @@ function importJSON() {
               </g>
               <g id="foreground">
                 <!-- FOREGROUND -->
-                <template v-for="y in numY">
-                  <template v-for="x in numX">
+                <template v-for="y in numY" :key="y">
+                  <template v-for="x in numX" :key="x">
                     <Triangle
                       v-if="paintSurface[`${x},${y},0`]"
                       :square-size="squareSize"
@@ -408,7 +357,7 @@ function importJSON() {
         be toggled with the checkbox below.
       </p>
 
-      <hr>
+      <hr />
       <h2>Features</h2>
       <div class="button-grid">
         <CheckboxButton
@@ -437,29 +386,21 @@ function importJSON() {
           label="Background"
         />
       </div>
-      <hr>
+      <hr />
       <h2>Resolution</h2>
 
       <div class="input-row">
         <label for="gradientType">
           <span>Width</span>
-          <input
-            id="gradientWidth"
-            v-model="width"
-            type="number"
-          >
+          <input id="gradientWidth" v-model="width" type="number" />
         </label>
         <label for="gradientType">
           <span>Height</span>
-          <input
-            id="gradientHeight"
-            v-model="height"
-            type="number"
-          >
+          <input id="gradientHeight" v-model="height" type="number" />
         </label>
       </div>
 
-      <hr>
+      <hr />
       <h2>Actions</h2>
 
       <Button
@@ -487,13 +428,15 @@ function importJSON() {
           target="_blank"
           rel="noopener noreferrer"
           href="https://thilo-billerbeck.com/impressum/"
-        >Imprint</a>
+          >Imprint</a
+        >
         <span> - </span>
         <a
           target="_blank"
           rel="noopener noreferrer"
           href="https://git.thilo-billerbeck.com/thilobillerbeck/gpn23-svg-generator"
-        >Source Code</a>
+          >Source Code</a
+        >
       </footer>
     </div>
   </div>

@@ -4,7 +4,6 @@ import { computed, defineProps } from "vue";
 const props = defineProps({
   squareSize: {
     type: Number,
-    required: true,
     default: 100,
   },
   x: {
@@ -56,8 +55,5 @@ const pos = computed(() => {
 </script>
 
 <template>
-  <polygon
-    :points="pos"
-    :fill="fill"
-  />
+  <polygon :points="pos" :fill="fill" />
 </template>
