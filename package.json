@@ -1,0 +1,29 @@
+{
+  "name": "gpn-svg-generator",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "format": "prettier --write .",
+    "lint": "eslint . --ext .ts,.js,.vue"
+  },
+  "dependencies": {
+    "@peterek/vite-plugin-favicons": "^2.1.0",
+    "lzjs": "^1.3.1",
+    "vue": "^3.5.17",
+    "vue-zoomable": "^1.2.8"
+  },
+  "devDependencies": {
+    "@iconify-json/mdi": "^1.2.3",
+    "@vitejs/plugin-vue": "^5.2.4",
+    "eslint": "^9.29.0",
+    "eslint-plugin-vue": "^10.2.0",
+    "prettier": "^3.5.3",
+    "unplugin-icons": "^22.1.0",
+    "vite": "^6.3.5",
+    "vite-plugin-pwa": "^1.0.0"
+  }
+}
