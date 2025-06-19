@@ -423,7 +423,7 @@ function importJSON() {
       />
 
       <footer>
-        <span> &copy; 2025 avocadoom - </span>
+        <span>Coded with ❤️ by avocadoom - </span>
         <a
           target="_blank"
           rel="noopener noreferrer"
@@ -434,7 +434,7 @@ function importJSON() {
         <a
           target="_blank"
           rel="noopener noreferrer"
-          href="https://git.thilo-billerbeck.com/thilobillerbeck/gpn23-svg-generator"
+          href="https://github.com/thilobillerbeck/gpn23-svg-generator"
           >Source Code</a
         >
       </footer>
