@@ -1,9 +1,6 @@
 <template>
   <button>
-    <component
-      :is="icon"
-      class="pre-icon"
-    />
+    <component :is="icon" class="pre-icon" />
     {{ label }}
   </button>
 </template>

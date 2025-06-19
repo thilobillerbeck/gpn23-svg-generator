@@ -1,22 +1,10 @@
 <template>
   <label :class="{ active: model }">
-    <CheckboxBlank
-      v-if="!model"
-      class="icon"
-    />
-    <CheckboxMarked
-      v-else
-      class="icon"
-    />
-    <component
-      :is="icon"
-      class="pre-icon"
-    />
+    <CheckboxBlank v-if="!model" class="icon" />
+    <CheckboxMarked v-else class="icon" />
+    <component :is="icon" class="pre-icon" />
     {{ label }}
-    <input
-      v-model="model"
-      type="checkbox"
-    >
+    <input v-model="model" type="checkbox" />
   </label>
 </template>
 

@@ -21,6 +21,7 @@ const enableCA = ref(true);
 const enableBackground = ref(true);
 const enableGrain = ref(true);
 const whiteColors = ref(false);
+const abberationIntensity = ref(1);
 
 const squareSize = 100;
 
@@ -143,9 +144,19 @@ function importJSON() {
                 </feComponentTransfer>
               </filter>
               <filter v-if="enableCA" id="chromatic_aberration">
-                <feOffset in="SourceGraphic" result="pre-red" dx="-8" dy="4" />
+                <feOffset
+                  in="SourceGraphic"
+                  result="pre-red"
+                  :dx="-8 * abberationIntensity"
+                  :dy="4 * abberationIntensity"
+                />
                 <feOffset in="SourceGraphic" result="pre-green" dx="0" dy="0" />
-                <feOffset in="SourceGraphic" result="pre-blue" dx="8" dy="-4" />
+                <feOffset
+                  in="SourceGraphic"
+                  result="pre-blue"
+                  :dx="8 * abberationIntensity"
+                  :dy="-4 * abberationIntensity"
+                />
                 <feColorMatrix
                   type="matrix"
                   in="pre-red"
@@ -386,6 +397,18 @@ function importJSON() {
           label="Background"
         />
       </div>
+      <label for="abberationIntensity" id="abberationIntensityLabel">
+        <span>Chromatic Aberration Intensity</span>
+        <input
+          id="abberationIntensity"
+          v-model="abberationIntensity"
+          type="range"
+          min="1"
+          max="3"
+          step="0.1"
+        />
+      </label>
+
       <hr />
       <h2>Resolution</h2>
 
@@ -496,5 +519,18 @@ footer {
   text-align: center;
   font-size: 0.8rem;
   color: #aaa;
+}
+#abberationIntensityLabel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+#abberationIntensity {
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 1rem;
+  background: #444;
+  outline: none;
 }
 </style>
