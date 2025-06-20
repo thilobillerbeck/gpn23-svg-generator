@@ -426,24 +426,26 @@ function importJSON() {
       <hr />
       <h2>Actions</h2>
 
-      <Button
-        id="generateButton"
-        :icon="MdiDownload"
-        label="Generate SVG"
-        @click="generateSVG"
-      />
-      <Button
-        id="downloadJSONButton"
-        :icon="MdiDownload"
-        label="Download JSON"
-        @click="downloadJSON"
-      />
-      <Button
-        id="importJSONButton"
-        :icon="MdiUpload"
-        label="Import JSON"
-        @click="importJSON"
-      />
+      <div class="button-row">
+        <Button
+          id="generateButton"
+          :icon="MdiDownload"
+          label="Generate SVG"
+          @click="generateSVG"
+        />
+        <Button
+          id="downloadJSONButton"
+          :icon="MdiDownload"
+          label="Download JSON"
+          @click="downloadJSON"
+        />
+        <Button
+          id="importJSONButton"
+          :icon="MdiUpload"
+          label="Import JSON"
+          @click="importJSON"
+        />
+      </div>
 
       <footer>
         <span>Coded with ❤️ by avocadoom - </span>
@@ -532,5 +534,9 @@ footer {
   height: 1rem;
   background: #444;
   outline: none;
+}
+.button-row {
+  display: flex;
+  gap: 0.5rem;
 }
 </style>
