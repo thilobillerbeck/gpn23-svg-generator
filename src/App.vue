@@ -1,5 +1,12 @@
 <script setup>
-import { computed, onMounted, onUpdated, reactive, ref } from "vue";
+import {
+  computed,
+  onBeforeMount,
+  onMounted,
+  onUpdated,
+  reactive,
+  ref,
+} from "vue";
 import VueZoomable from "vue-zoomable";
 import "vue-zoomable/dist/style.css";
 import CheckboxButton from "./components/CheckboxButton.vue";
@@ -13,6 +20,7 @@ import MdiGrain from "~icons/mdi/grain";
 import MdiLens from "~icons/mdi/lens";
 import MdiDownload from "~icons/mdi/download";
 import MdiUpload from "~icons/mdi/upload";
+import MdiDelete from "~icons/mdi/delete";
 
 const width = ref(1020);
 const height = ref(1020);
@@ -39,6 +47,48 @@ function randomGrayColor() {
   return `rgb(${r}, ${g}, ${b})`;
 }
 
+function marshallData() {
+  return JSON.stringify({
+    paintSurface: paintSurface.value,
+    squareSize: squareSize,
+    height: height.value,
+    width: width.value,
+    enableGradient: enableGradient.value,
+    enableCA: enableCA.value,
+    enableBackground: enableBackground.value,
+    enableGrain: enableGrain.value,
+    whiteColors: whiteColors.value,
+    abberationIntensity: abberationIntensity.value,
+  });
+}
+
+function unmarshallData(raw) {
+  const data = JSON.parse(raw);
+  paintSurface.value = data.paintSurface;
+  height.value = data.height;
+  width.value = data.width;
+  enableGradient.value = data.enableGradient;
+  enableCA.value = data.enableCA;
+  enableBackground.value = data.enableBackground;
+  whiteColors.value = data.whiteColors ?? false;
+  abberationIntensity.value = data.abberationIntensity ?? 1;
+}
+
+function saveToLocalStorage() {
+  const data = marshallData();
+  localStorage.setItem("paint_surface", data);
+}
+
+function loadFromLocalStorage() {
+  const raw = localStorage.getItem("paint_surface");
+  if (raw) unmarshallData(raw);
+}
+
+function onPaintSurfaceChange(location) {
+  paintSurface.value[location] = !paintSurface.value[location];
+  saveToLocalStorage();
+}
+
 function generateSVG() {
   const svg = document.getElementById("svg");
   const svgData = new XMLSerializer().serializeToString(svg);
@@ -51,18 +101,7 @@ function generateSVG() {
 }
 
 function downloadJSON() {
-  const data = JSON.stringify({
-    paintSurface: paintSurface.value,
-    squareSize: squareSize,
-    height: height.value,
-    width: width.value,
-    enableGradient: enableGradient.value,
-    enableCA: enableCA.value,
-    enableBackground: enableBackground.value,
-    enableGrain: enableGrain.value,
-    whiteColors: whiteColors.value,
-    abberationIntensity: abberationIntensity.value,
-  });
+  const data = marshallData();
   const blob = new Blob([data], { type: "application/json" });
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
@@ -80,20 +119,22 @@ function importJSON() {
     const file = event.target.files[0];
     const reader = new FileReader();
     reader.onload = (event) => {
-      const data = JSON.parse(event.target.result);
-      paintSurface.value = data.paintSurface;
-      height.value = data.height;
-      width.value = data.width;
-      enableGradient.value = data.enableGradient;
-      enableCA.value = data.enableCA;
-      enableBackground.value = data.enableBackground;
-      whiteColors.value = data.whiteColors ?? false;
-      abberationIntensity.value = data.abberationIntensity ?? 1;
+      unmarshallData(event.target.result);
+      saveToLocalStorage();
     };
     reader.readAsText(file);
   };
   input.click();
 }
+
+function resetPaintSurfac() {
+  paintSurface.value = {};
+  saveToLocalStorage();
+}
+
+onBeforeMount(() => {
+  loadFromLocalStorage();
+});
 </script>
 
 <template>
@@ -219,10 +260,7 @@ function importJSON() {
                           ? randomGrayColor()
                           : `${whiteColors ? 'white' : 'transparent'}`
                       "
-                      @click="
-                        paintSurface[`${x},${y},0`] =
-                          !paintSurface[`${x},${y},0`]
-                      "
+                      @click="onPaintSurfaceChange(`${x},${y},0`)"
                     />
                     <Triangle
                       :square-size="squareSize"
@@ -240,10 +278,7 @@ function importJSON() {
                           ? randomGrayColor()
                           : `${whiteColors ? 'white' : 'transparent'}`
                       "
-                      @click="
-                        paintSurface[`${x},${y},1`] =
-                          !paintSurface[`${x},${y},1`]
-                      "
+                      @click="onPaintSurfaceChange(`${x},${y},1`)"
                     />
                     <Triangle
                       :square-size="squareSize"
@@ -261,10 +296,7 @@ function importJSON() {
                           ? randomGrayColor()
                           : `${whiteColors ? 'white' : 'transparent'}`
                       "
-                      @click="
-                        paintSurface[`${x},${y},2`] =
-                          !paintSurface[`${x},${y},2`]
-                      "
+                      @click="onPaintSurfaceChange(`${x},${y},2`)"
                     />
                     <Triangle
                       :square-size="squareSize"
@@ -284,10 +316,7 @@ function importJSON() {
                       "
                       :ondragend="(e) => e.preventDefault()"
                       :ondragleave="(e) => e.preventDefault()"
-                      @click="
-                        paintSurface[`${x},${y},3`] =
-                          !paintSurface[`${x},${y},3`]
-                      "
+                      @click="onPaintSurfaceChange(`${x},${y},3`)"
                     />
                   </template>
                 </template>
@@ -377,26 +406,31 @@ function importJSON() {
           v-model="whiteColors"
           :icon="MdiThemeLightDark"
           label="Invert"
+          @update:model-value="() => saveToLocalStorage()"
         />
         <CheckboxButton
           v-model="enableGrain"
           :icon="MdiGrain"
           label="Film Grain"
+          @update:model-value="() => saveToLocalStorage()"
         />
         <CheckboxButton
           v-model="enableGradient"
           :icon="MdiGradientVertical"
           label="Gradient"
+          @update:model-value="() => saveToLocalStorage()"
         />
         <CheckboxButton
           v-model="enableCA"
           :icon="MdiLens"
           label="Chromatic Aberration"
+          @update:model-value="() => saveToLocalStorage()"
         />
         <CheckboxButton
           v-model="enableBackground"
           :icon="MdiImageOutline"
           label="Background"
+          @update:model-value="() => saveToLocalStorage()"
         />
       </div>
       <label for="abberationIntensity" id="abberationIntensityLabel">
@@ -408,6 +442,7 @@ function importJSON() {
           min="1"
           max="3"
           step="0.1"
+          @update:model-value="() => saveToLocalStorage()"
         />
       </label>
 
@@ -417,18 +452,27 @@ function importJSON() {
       <div class="input-row">
         <label for="gradientType">
           <span>Width</span>
-          <input id="gradientWidth" v-model="width" type="number" />
+          <input
+            id="gradientWidth"
+            v-model="width"
+            type="number"
+            @update:model-value="() => saveToLocalStorage()"
+          />
         </label>
         <label for="gradientType">
           <span>Height</span>
-          <input id="gradientHeight" v-model="height" type="number" />
+          <input
+            id="gradientHeight"
+            v-model="height"
+            type="number"
+            @update:model-value="() => saveToLocalStorage()"
+          />
         </label>
       </div>
 
       <hr />
-      <h2>Actions</h2>
 
-      <div class="button-row">
+      <div class="button-grid">
         <Button
           id="generateButton"
           :icon="MdiDownload"
@@ -446,6 +490,13 @@ function importJSON() {
           :icon="MdiUpload"
           label="Import JSON"
           @click="importJSON"
+        />
+        <Button
+          id="resetButton"
+          danger
+          :icon="MdiDelete"
+          label="Reset"
+          @click="resetPaintSurfac"
         />
       </div>
 
@@ -536,9 +587,5 @@ footer {
   height: 1rem;
   background: #444;
   outline: none;
-}
-.button-row {
-  display: flex;
-  gap: 0.5rem;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <button>
+  <button :class="{ danger }" @click="model = !model">
     <component :is="icon" class="pre-icon" />
     {{ label }}
   </button>
@@ -16,6 +16,10 @@ defineProps({
   icon: {
     type: Object,
     required: true,
+  },
+  danger: {
+    type: Boolean,
+    default: false,
   },
 });
 </script>
@@ -40,6 +44,10 @@ button:hover {
 .pre-icon {
   margin-right: 0.5rem;
   font-size: 1.2rem;
+  color: white;
+}
+.danger {
+  background-color: #440000;
   color: white;
 }
 </style>
