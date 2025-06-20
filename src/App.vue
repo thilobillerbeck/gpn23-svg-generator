@@ -61,6 +61,7 @@ function downloadJSON() {
     enableBackground: enableBackground.value,
     enableGrain: enableGrain.value,
     whiteColors: whiteColors.value,
+    abberationIntensity: abberationIntensity.value,
   });
   const blob = new Blob([data], { type: "application/json" });
   const url = URL.createObjectURL(blob);
@@ -86,7 +87,8 @@ function importJSON() {
       enableGradient.value = data.enableGradient;
       enableCA.value = data.enableCA;
       enableBackground.value = data.enableBackground;
-      white: Colors.value = data.whiteColors ?? false;
+      whiteColors.value = data.whiteColors ?? false;
+      abberationIntensity.value = data.abberationIntensity ?? 1;
     };
     reader.readAsText(file);
   };
